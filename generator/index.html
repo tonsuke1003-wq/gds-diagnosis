@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIに渡す「わたしの取説」作成ツール | GDS</title>
+  <meta name="description" content="診断結果をもとに、AIが毎回あなたの価値を引き出すパーソナルプロンプトを作成します。">
+
+  <!-- OGP -->
+  <meta property="og:title" content="AIに渡す「わたしの取説」作成ツール">
+  <meta property="og:description" content="診断結果をもとにパーソナルAIプロンプトを生成。AIが毎回あなたの価値を引き出します。">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="AIに渡す「わたしの取説」作成ツール">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+
+  <style>
+/* ===== Reset & Base ===== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-bg: #FAFAF7;
+  --color-primary: #B85450;
+  --color-text: #2D2D2D;
+  --color-border: #E5E5E5;
+  --color-accent-light: #F0E4D0;
+  --color-white: #FFFFFF;
+  --color-gray-mid: #888888;
+  --color-story: #B85450;
+  --color-sense: #7A9E7E;
+  --color-relation: #5A7BAA;
+  --color-inquiry: #9B7EC8;
+  --font-main: 'Noto Sans JP', sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --shadow-card: 0 4px 16px rgba(0,0,0,0.08);
+  --transition-base: 300ms ease;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-main);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* ===== Layout ===== */
+.app-container {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 16px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== Typography ===== */
+h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+p {
+  font-size: 0.9375rem;
+  line-height: 1.8;
+}
+
+/* ===== Screens (shared fade logic) ===== */
+.screen {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.screen.active {
+  display: flex;
+}
+
+.screen.visible {
+  opacity: 1;
+}
+
+/* ===== Start Screen ===== */
+.start-screen {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px 16px;
+  gap: 24px;
+}
+
+.brand-logo {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--color-gray-mid);
+  text-transform: uppercase;
+}
+
+.start-title-area {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.start-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.start-main-title {
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--color-text);
+}
+
+.start-subtitle {
+  font-size: 0.875rem;
+  color: var(--color-gray-mid);
+  line-height: 1.7;
+}
+
+.start-description {
+  background: var(--color-accent-light);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  text-align: left;
+}
+
+.start-description p {
+  font-size: 0.875rem;
+  color: var(--color-text);
+}
+
+.start-info {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.info-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.info-label {
+  font-size: 0.75rem;
+  color: var(--color-gray-mid);
+}
+
+/* ===== Progress Bar ===== */
+.progress-area {
+  padding: 20px 0 8px;
+}
+
+.progress-bar-wrap {
+  background: var(--color-border);
+  border-radius: 100px;
+  height: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--color-primary);
+  border-radius: 100px;
+  transition: width 400ms ease;
+}
+
+.progress-text {
+  font-size: 0.75rem;
+  color: var(--color-gray-mid);
+  margin-top: 8px;
+  text-align: right;
+}
+
+/* ===== Question Screen ===== */
+.question-screen {
+  padding: 16px 0 40px;
+  gap: 0;
+}
+
+.question-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 8px;
+}
+
+.question-text {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+/* ===== Free-text Input ===== */
+.gen-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gen-sub-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gen-input-label {
+  font-size: 0.8125rem;
+  color: var(--color-gray-mid);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.gen-input-field {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1.5px solid #DDD8CF;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-main);
+  font-size: 0.9375rem;
+  color: var(--color-text);
+  background: var(--color-white);
+  box-sizing: border-box;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+  -webkit-appearance: none;
+}
+
+.gen-input-field:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(184,84,80,0.12);
+}
+
+.gen-input-field.error {
+  border-color: #E05555;
+}
+
+textarea.gen-input-field {
+  min-height: 110px;
+  resize: vertical;
+  line-height: 1.7;
+}
+
+.gen-input-hint {
+  font-size: 0.8rem;
+  color: var(--color-gray-mid);
+  line-height: 1.5;
+}
+
+.gen-input-error {
+  font-size: 0.8125rem;
+  color: #E05555;
+  display: none;
+}
+
+.gen-input-error.visible {
+  display: block;
+}
+
+.gen-next-btn-wrap {
+  margin-top: 24px;
+  padding-bottom: 16px;
+}
+
+/* ===== Analyzing Screen ===== */
+.analyzing-screen {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 32px;
+  padding: 40px 16px;
+}
+
+.analyzing-animation {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.pulse-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 3px solid var(--color-primary);
+  animation: pulse 1.4s ease-out infinite;
+}
+
+.pulse-ring:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.pulse-ring:nth-child(3) {
+  animation-delay: 1s;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.3); opacity: 1; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+.analyzing-icon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+
+.analyzing-text h2 {
+  font-size: 1.125rem;
+  color: var(--color-text);
+}
+
+.analyzing-text p {
+  font-size: 0.875rem;
+  color: var(--color-gray-mid);
+}
+
+/* ===== Result Card ===== */
+.result-card {
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+}
+
+.result-card-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: 8px;
+}
+
+.result-card h3 {
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.result-card p {
+  font-size: 0.9rem;
+  color: #444;
+}
+
+/* ===== CTA to Generator ===== */
+.cta-generator {
+  background: linear-gradient(135deg, #2D2D2D 0%, #444 100%);
+  color: var(--color-white);
+  border-radius: var(--radius-md);
+  padding: 24px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cta-generator h3 {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.cta-generator p {
+  font-size: 0.8125rem;
+  opacity: 0.85;
+  line-height: 1.6;
+}
+
+/* ===== Generator Screens ===== */
+.generator-start-screen {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px 16px;
+  gap: 24px;
+}
+
+.generator-question-screen {
+  padding: 16px 0 40px;
+  gap: 0;
+}
+
+.generator-result-screen {
+  padding: 24px 0 60px;
+  gap: 20px;
+}
+
+.reminder-banner {
+  background: #FFF3CD;
+  border: 1px solid #FFD96A;
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  font-size: 0.8125rem;
+  color: #7A5800;
+  line-height: 1.6;
+}
+
+/* ===== Generated Result ===== */
+.result-prompt-wrap {
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.result-prompt-text {
+  font-size: 0.9rem;
+  line-height: 1.9;
+  color: var(--color-text);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.copy-btn {
+  width: 100%;
+  padding: 16px;
+  background: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-main);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  min-height: 44px;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity var(--transition-base), transform 100ms ease;
+}
+
+.copy-btn:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+.copy-btn.copied {
+  background: #4CAF50;
+}
+
+/* ===== Primary Button ===== */
+.btn-primary {
+  display: block;
+  width: 100%;
+  padding: 16px 24px;
+  background: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-main);
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  min-height: 44px;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity var(--transition-base), transform 100ms ease;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(184, 84, 80, 0.3);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+.btn-secondary {
+  display: block;
+  width: 100%;
+  padding: 14px 24px;
+  background: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  font-family: var(--font-main);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  min-height: 44px;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity var(--transition-base);
+  text-decoration: none;
+}
+
+.btn-secondary:active {
+  opacity: 0.7;
+}
+
+/* ===== Utility ===== */
+.mt-auto { margin-top: auto; }
+.mt-8  { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.text-center { text-align: center; }
+.text-small { font-size: 0.875rem; }
+.text-muted { color: var(--color-gray-mid); }
+.hidden { display: none !important; }
+
+/* ===== Responsive ===== */
+@media (min-width: 480px) {
+  .app-container {
+    padding: 0 0;
+  }
+}
+  </style>
+</head>
+<body>
+
+<div class="app-container" id="app">
+
+  <!-- ===== START SCREEN ===== -->
+  <div class="screen generator-start-screen active" id="screen-gen-start">
+    <div class="brand-logo">GDS — 小倉なおよ</div>
+
+    <div class="start-title-area">
+      <div class="start-label">STEP 2</div>
+      <h1 class="start-main-title">AIに渡す<br>「わたしの取説」</h1>
+      <p class="start-subtitle">10の質問に答えるだけで<br>あなた専用のAIプロンプトが完成します</p>
+    </div>
+
+    <!-- 3ヶ月リマインダー（JSで表示制御） -->
+    <div class="reminder-banner hidden" id="reminder-banner">
+      ⏰ 前回の診断から3ヶ月が経過しました。取説を更新することをお勧めします。
+    </div>
+
+    <!-- 診断結果なしの場合 -->
+    <div class="hidden" id="no-diagnosis-msg">
+      <div class="result-card">
+        <p class="text-small" style="text-align:center;">まず診断ツールで<br>あなたのタイプを確認してください。</p>
+        <a class="btn-primary mt-16" href="/diagnosis">診断ツールへ →</a>
+      </div>
+    </div>
+
+    <!-- 診断済みの場合 -->
+    <div id="has-diagnosis-block">
+      <div class="result-card" id="diagnosis-summary" style="text-align:center;">
+        <div class="result-card-label" id="gen-type-label"></div>
+        <p id="gen-type-name" style="font-weight:700; font-size:1.0625rem;"></p>
+      </div>
+
+      <div class="start-description mt-16">
+        <p>診断で見つかったあなたの資質タイプをベースに、AIへの指示文（プロンプト）をカスタマイズします。自分の言葉で答えることで、より精度の高い取説が生まれます。</p>
+      </div>
+
+      <div class="start-info">
+        <div class="info-item">
+          <span class="info-number">10</span>
+          <span class="info-label">問</span>
+        </div>
+        <div class="info-item">
+          <span class="info-number">5</span>
+          <span class="info-label">分</span>
+        </div>
+      </div>
+
+      <button class="btn-primary" id="btn-gen-start">取説を作りはじめる</button>
+      <a href="/diagnosis" class="btn-secondary mt-16">診断をやり直す</a>
+    </div>
+  </div>
+
+  <!-- ===== QUESTION SCREEN ===== -->
+  <div class="screen generator-question-screen" id="screen-gen-question">
+    <div class="progress-area">
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="gen-progress-bar" style="width: 0%"></div>
+      </div>
+      <div class="progress-text" id="gen-progress-text">1 / 10</div>
+    </div>
+
+    <div class="question-content" id="gen-question-content">
+      <p class="question-text" id="gen-question-text"></p>
+      <div class="gen-input-group" id="gen-input-group"></div>
+      <p class="gen-input-error" id="gen-input-error">回答を入力してください</p>
+      <div class="gen-next-btn-wrap">
+        <button class="btn-primary" id="btn-gen-next">次へ →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ANALYZING SCREEN ===== -->
+  <div class="screen analyzing-screen" id="screen-gen-analyzing">
+    <div class="analyzing-animation">
+      <div class="pulse-ring"></div>
+      <div class="pulse-ring"></div>
+      <div class="pulse-ring"></div>
+      <div class="analyzing-icon">✍️</div>
+    </div>
+    <div class="analyzing-text">
+      <h2>取説を生成中…</h2>
+      <p>あなた専用のAIプロンプトを作成しています</p>
+    </div>
+  </div>
+
+  <!-- ===== RESULT SCREEN ===== -->
+  <div class="screen generator-result-screen" id="screen-gen-result">
+    <div class="start-title-area text-center">
+      <div class="start-label">完成しました！</div>
+      <h2>あなたの「AIわたし取説」</h2>
+      <p class="start-subtitle text-small">以下をそのままAI（ChatGPT・Claude等）に貼り付けてください</p>
+    </div>
+
+    <div class="result-prompt-wrap">
+      <p class="result-prompt-text" id="gen-result-text"></p>
+      <button class="copy-btn" id="btn-copy">コピーする</button>
+    </div>
+
+    <div class="result-card" style="background: var(--color-accent-light);">
+      <div class="result-card-label">使い方のヒント</div>
+      <p class="text-small">新しいAIチャットを開くたびに、このテキストを最初に貼り付けてから質問してみましょう。AIがあなたの価値を踏まえた返答をしてくれるようになります。</p>
+    </div>
+
+    <div class="cta-generator">
+      <h3>GDSオンラインサロンで<br>さらに深く学ぶ</h3>
+      <p class="text-small" style="opacity:0.85;">取説を活かした収益化の実践法を<br>コミュニティで学べます。</p>
+      <a class="btn-primary" href="#" id="btn-cta-salon">詳しく見る →</a>
+    </div>
+
+    <button class="btn-secondary mt-16" id="btn-gen-retry">もう一度作り直す</button>
+    <a href="GDS_診断ツール.html" class="btn-secondary mt-8">診断をやり直す</a>
+  </div>
+
+</div><!-- /.app-container -->
+
+<script>
+// ===== TYPE DATA =====
+
+const TYPE_DATA = {
+  story: {
+    name: '物語型で選ばれる人',
+    key: 'story',
+    catchcopy: '人生そのものが、誰にも真似できないコンテキストになる人',
+    core: '人生の起伏・経験・葛藤から生まれる「物語の深さ」。これが、あなたが何度AIツールを乗り換えても、ずっとあなたを支え続ける資産です。',
+    templateText: '私は人生の経験や物語を大切にする人間です。過去の体験から生まれる深さやリアリティを、言葉や提案に込めることが私らしさです。',
+  },
+  sense: {
+    name: '感性型で選ばれる人',
+    key: 'sense',
+    catchcopy: '「これじゃない」を一瞬で見抜ける、AI時代に最も貴重な感覚を持つ人',
+    core: '理屈で説明できない直感・センス・違和感の感度。これが、AIがどれほど進化しても、ずっとあなたを支え続ける資産です。',
+    templateText: '私は直感や感覚を大切にする人間です。「なんかいい」「これ違う」という感覚を、丁寧に言葉や形にしていくことが私らしさです。',
+  },
+  relation: {
+    name: '関係型で選ばれる人',
+    key: 'relation',
+    catchcopy: '「あなたなしではいられない」と、最も言われやすい人',
+    core: '人と人の間で生まれる空気を読む力、深い信頼関係を築く力。これが、AIがどれほど進化しても、ずっとあなたを支え続ける資産です。',
+    templateText: '私は人との関わりを大切にする人間です。相手の本音を引き出し、深い信頼関係を築きながら一緒に育っていくことが私らしさです。',
+  },
+  inquiry: {
+    name: '探究型で選ばれる人',
+    key: 'inquiry',
+    catchcopy: 'AIに「最大公約数じゃない問い」を投げられる、稀有な思考力を持つ人',
+    core: '本質を見抜く力、新しい問いを立てる思考の癖。これが、AIがどれほど進化しても、ずっとあなたを支え続ける資産です。',
+    templateText: '私は本質を見抜くことを大切にする人間です。表面的な答えで満足せず、「なぜ？」を掘り下げて新しい問いを立てることが私らしさです。',
+  },
+};
+
+const TYPE_LABELS = {
+  story: '物語型',
+  sense: '感性型',
+  relation: '関係型',
+  inquiry: '探究型',
+};
+
+// ===== GENERATOR =====
+
+(function () {
+  'use strict';
+
+  const STORAGE_KEY = 'gds_diagnosis_result';
+  const THREE_MONTHS_MS = 90 * 24 * 60 * 60 * 1000;
+
+  // ===== 10 Questions (free-text) =====
+  // type: 'text' = single-line input, 'textarea' = multi-line, 'multi' = multiple sub-inputs
+  const GEN_QUESTIONS = [
+    {
+      id: 1,
+      text: 'あなたの肩書き・活動ジャンルを教えてください',
+      hint: '例：ライフコーチ、ハンドメイド作家、中小企業向けSNSコンサルタント など',
+      type: 'text',
+      placeholder: '例：フリーランスのWebデザイナー',
+      key: 'title',
+    },
+    {
+      id: 2,
+      text: 'あなたが仕事・表現において「絶対に譲れない」価値観を3つ挙げてください',
+      hint: '直感で出てくる言葉でOKです',
+      type: 'multi',
+      inputs: [
+        { placeholder: '例：本質を大切にする', key: 'value1' },
+        { placeholder: '例：温かみのある関係性', key: 'value2' },
+        { placeholder: '例：オリジナリティ', key: 'value3' },
+      ],
+    },
+    {
+      id: 3,
+      text: 'あなたの言葉の特徴・口調はどんな感じですか？',
+      hint: '例：やわらかく親しみやすい／論理的でシャープ／詩的で感情的 など',
+      type: 'text',
+      placeholder: '例：やわらかく、感情に寄り添うような話し方',
+      key: 'tone',
+    },
+    {
+      id: 4,
+      text: 'AIに使ってほしくない表現・言い回しはありますか？',
+      hint: '例：「革命的」「最先端」などの誇張表現、体育会系の煽り言葉 など',
+      type: 'text',
+      placeholder: '例：「圧倒的」「ぶっちゃけ」「稼ぎたいなら」',
+      key: 'avoid',
+    },
+    {
+      id: 5,
+      text: 'あなたが一番自信を持っていること・得意なことは何ですか？',
+      hint: 'スキル・才能・人柄なんでも',
+      type: 'text',
+      placeholder: '例：相手の話を深く聴き、本質を言語化すること',
+      key: 'strength',
+    },
+    {
+      id: 6,
+      text: 'あなたの理想のお客様・読者像を教えてください',
+      hint: '年代・悩み・状況など具体的に',
+      type: 'text',
+      placeholder: '例：副業を始めたい30代女性で、自分の強みを見つけられずにいる方',
+      key: 'audience',
+    },
+    {
+      id: 7,
+      text: 'AIに最もよく頼むこと・使いたいシーンを教えてください',
+      hint: '例：SNS投稿の文章作成、提案書のたたき台、アイデア出し など',
+      type: 'text',
+      placeholder: '例：ブログ記事の構成案作りと、SNS投稿のキャッチコピー',
+      key: 'usecase',
+    },
+    {
+      id: 8,
+      text: 'AIに出力してほしい文章のスタイルを教えてください',
+      hint: '例：箇条書き中心／長文で丁寧に／短くテンポよく など',
+      type: 'text',
+      placeholder: '例：結論を先に、理由は箇条書きで3つ以内に収める',
+      key: 'style',
+    },
+    {
+      id: 9,
+      text: 'あなたのブランドや世界観のキーワードを教えてください',
+      hint: '色・雰囲気・世界観・大切にしているコンセプトなど',
+      type: 'text',
+      placeholder: '例：シンプル、和の温かみ、余白、ナチュラル',
+      key: 'brand',
+    },
+    {
+      id: 10,
+      text: '最近感じている変化・気づき・伝えたいメッセージを自由に書いてください',
+      hint: 'AIへのひと言としてプロンプトに組み込まれます',
+      type: 'textarea',
+      placeholder: '例：AIが普及した今こそ、人間らしい温かみのある発信が差別化になると感じています。',
+      key: 'message',
+    },
+  ];
+
+  // ===== State =====
+  let diagResult = null;
+  let genAnswers = {};
+  let genIndex   = 0;
+
+  // ===== Element refs =====
+  const screens = {
+    start:     document.getElementById('screen-gen-start'),
+    question:  document.getElementById('screen-gen-question'),
+    analyzing: document.getElementById('screen-gen-analyzing'),
+    result:    document.getElementById('screen-gen-result'),
+  };
+
+  // ===== Screen transitions =====
+  function showScreen(name) {
+    Object.values(screens).forEach(function(el) {
+      el.classList.remove('active', 'visible');
+    });
+    var target = screens[name];
+    target.classList.add('active');
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        target.classList.add('visible');
+      });
+    });
+  }
+
+  // ===== Load diagnosis result =====
+  function loadDiagnosis() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (e) { /* ignore */ }
+    return null;
+  }
+
+  // ===== Init start screen =====
+  function initStartScreen() {
+    diagResult = loadDiagnosis();
+
+    var noDiagMsg      = document.getElementById('no-diagnosis-msg');
+    var hasDiagBlock   = document.getElementById('has-diagnosis-block');
+    var reminderBanner = document.getElementById('reminder-banner');
+    var genTypeLabel   = document.getElementById('gen-type-label');
+    var genTypeName    = document.getElementById('gen-type-name');
+
+    if (!diagResult) {
+      noDiagMsg.classList.remove('hidden');
+      hasDiagBlock.classList.add('hidden');
+      return;
+    }
+
+    noDiagMsg.classList.add('hidden');
+    hasDiagBlock.classList.remove('hidden');
+
+    var typeLabel = TYPE_LABELS[diagResult.mainType] || diagResult.mainType;
+    var typeName  = (TYPE_DATA[diagResult.mainType] || {}).name || typeLabel;
+    genTypeLabel.textContent = typeLabel;
+    genTypeName.textContent  = typeName;
+
+    if (diagResult.savedAt && (Date.now() - diagResult.savedAt) > THREE_MONTHS_MS) {
+      reminderBanner.classList.remove('hidden');
+    }
+
+    document.getElementById('btn-gen-start').addEventListener('click', function() {
+      genAnswers = {};
+      genIndex   = 0;
+      showScreen('question');
+      setTimeout(renderGenQuestion, 50);
+    });
+  }
+
+  // ===== Render question =====
+  function renderGenQuestion() {
+    var q           = GEN_QUESTIONS[genIndex];
+    var progressBar = document.getElementById('gen-progress-bar');
+    var progressTxt = document.getElementById('gen-progress-text');
+    var questionTxt = document.getElementById('gen-question-text');
+    var inputGroup  = document.getElementById('gen-input-group');
+    var errorEl     = document.getElementById('gen-input-error');
+
+    var pct = (genIndex / GEN_QUESTIONS.length) * 100;
+    progressBar.style.width  = pct + '%';
+    progressTxt.textContent  = (genIndex + 1) + ' / ' + GEN_QUESTIONS.length;
+
+    questionTxt.style.opacity = '0';
+    inputGroup.style.opacity  = '0';
+
+    errorEl.classList.remove('visible');
+    errorEl.classList.remove('gen-input-error');
+    errorEl.className = 'gen-input-error';
+
+    setTimeout(function() {
+      questionTxt.textContent = q.text;
+      inputGroup.innerHTML = '';
+
+      if (q.type === 'multi') {
+        var subWrap = document.createElement('div');
+        subWrap.className = 'gen-sub-inputs';
+        q.inputs.forEach(function(inp, idx) {
+          var label = document.createElement('div');
+          label.className = 'gen-input-label';
+          label.textContent = '価値観 ' + (idx + 1);
+          var field = document.createElement('input');
+          field.type = 'text';
+          field.className = 'gen-input-field';
+          field.placeholder = inp.placeholder;
+          field.dataset.subkey = inp.key;
+          var restore = genAnswers['q' + q.id + '_' + inp.key];
+          if (restore) field.value = restore;
+          subWrap.appendChild(label);
+          subWrap.appendChild(field);
+        });
+        inputGroup.appendChild(subWrap);
+      } else {
+        if (q.hint) {
+          var hint = document.createElement('p');
+          hint.className = 'gen-input-hint';
+          hint.textContent = q.hint;
+          inputGroup.appendChild(hint);
+        }
+        var field;
+        if (q.type === 'textarea') {
+          field = document.createElement('textarea');
+          field.className = 'gen-input-field';
+        } else {
+          field = document.createElement('input');
+          field.type = 'text';
+          field.className = 'gen-input-field';
+        }
+        field.placeholder = q.placeholder || '';
+        var restore = genAnswers['q' + q.id];
+        if (restore) field.value = restore;
+        inputGroup.appendChild(field);
+      }
+
+      questionTxt.style.transition = 'opacity 300ms ease';
+      inputGroup.style.transition  = 'opacity 300ms ease';
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+          questionTxt.style.opacity = '1';
+          inputGroup.style.opacity  = '1';
+          // Focus first field
+          var first = inputGroup.querySelector('.gen-input-field');
+          if (first) first.focus();
+        });
+      });
+    }, 250);
+  }
+
+  // ===== Collect current answer =====
+  function collectAnswer() {
+    var q = GEN_QUESTIONS[genIndex];
+    var errorEl = document.getElementById('gen-input-error');
+    errorEl.classList.remove('visible');
+
+    if (q.type === 'multi') {
+      var fields = document.querySelectorAll('#gen-input-group .gen-input-field');
+      var allEmpty = true;
+      fields.forEach(function(f) {
+        var val = f.value.trim();
+        if (val) allEmpty = false;
+        genAnswers['q' + q.id + '_' + f.dataset.subkey] = val;
+      });
+      if (allEmpty) {
+        errorEl.textContent = '少なくとも1つ入力してください';
+        errorEl.classList.add('visible');
+        return false;
+      }
+    } else {
+      var field = document.querySelector('#gen-input-group .gen-input-field');
+      if (!field) return false;
+      var val = field.value.trim();
+      if (!val) {
+        field.classList.add('error');
+        errorEl.textContent = '回答を入力してください';
+        errorEl.classList.add('visible');
+        field.focus();
+        return false;
+      }
+      field.classList.remove('error');
+      genAnswers['q' + q.id] = val;
+    }
+    return true;
+  }
+
+  // ===== Next button =====
+  function onNextClick() {
+    if (!collectAnswer()) return;
+    genIndex += 1;
+    if (genIndex < GEN_QUESTIONS.length) {
+      renderGenQuestion();
+    } else {
+      finishGenerator();
+    }
+  }
+
+  // ===== Finish =====
+  function finishGenerator() {
+    showScreen('analyzing');
+    setTimeout(function() {
+      var promptText = buildPrompt();
+      document.getElementById('gen-result-text').textContent = promptText;
+      showScreen('result');
+    }, 2000);
+  }
+
+  // ===== Build prompt =====
+  function buildPrompt() {
+    if (!diagResult) return '';
+
+    var typeData  = TYPE_DATA[diagResult.mainType] || {};
+    var subData   = TYPE_DATA[diagResult.subType]  || {};
+    var typeLabel = TYPE_LABELS[diagResult.mainType] || diagResult.mainType;
+    var subLabel  = TYPE_LABELS[diagResult.subType]  || diagResult.subType;
+
+    var title    = genAnswers['q1']  || '—';
+    var value1   = genAnswers['q2_value1'] || '';
+    var value2   = genAnswers['q2_value2'] || '';
+    var value3   = genAnswers['q2_value3'] || '';
+    var values   = [value1, value2, value3].filter(Boolean).join('・') || '—';
+    var tone     = genAnswers['q3']  || '—';
+    var avoid    = genAnswers['q4']  || '—';
+    var strength = genAnswers['q5']  || '—';
+    var audience = genAnswers['q6']  || '—';
+    var usecase  = genAnswers['q7']  || '—';
+    var style    = genAnswers['q8']  || '—';
+    var brand    = genAnswers['q9']  || '—';
+    var message  = genAnswers['q10'] || '—';
+
+    var prompt =
+      '# わたしの取説（パーソナルAIプロンプト）\n\n' +
+
+      '## 私の資質タイプ\n' +
+      '【メインタイプ】' + typeLabel + '：' + (typeData.name || '') + '\n' +
+      '【サブタイプ】'   + subLabel  + '：' + (subData.name  || '') + '\n\n' +
+
+      '## 私の本質的な強み\n' +
+      (typeData.templateText || '') + '\n\n' +
+
+      '## 私のプロフィール\n' +
+      '・肩書き・活動ジャンル：' + title + '\n' +
+      '・得意なこと：' + strength + '\n' +
+      '・理想のお客様・読者：' + audience + '\n\n' +
+
+      '## 私の価値観・こだわり\n' +
+      '・譲れない価値観：' + values + '\n' +
+      '・ブランド・世界観：' + brand + '\n\n' +
+
+      '## 私のコミュニケーションスタイル\n' +
+      '・言葉の特徴・口調：' + tone + '\n' +
+      '・使ってほしくない表現：' + avoid + '\n' +
+      '・出力してほしい文章スタイル：' + style + '\n\n' +
+
+      '## AIに頼みたいこと\n' +
+      '・主な用途：' + usecase + '\n\n' +
+
+      '## 私から一言\n' +
+      message + '\n\n' +
+
+      '## AIへのお願い\n' +
+      '上記のプロフィール・価値観・スタイルをすべて踏まえた上で回答してください。\n' +
+      '私の本質（' + (typeData.core || typeLabel) + '）が伝わる表現や提案を優先してください。\n' +
+      '「' + (typeData.catchcopy || '') + '」という私の価値を活かせる視点で考えてください。\n' +
+      '使ってほしくない表現（' + avoid + '）は絶対に使わないでください。';
+
+    return prompt;
+  }
+
+  // ===== Copy button =====
+  function initCopyButton() {
+    var copyBtn = document.getElementById('btn-copy');
+    copyBtn.addEventListener('click', function() {
+      var text = document.getElementById('gen-result-text').textContent;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function() {
+          copyBtn.textContent = 'コピーしました！';
+          copyBtn.classList.add('copied');
+          setTimeout(function() {
+            copyBtn.textContent = 'コピーする';
+            copyBtn.classList.remove('copied');
+          }, 2500);
+        }).catch(function() { fallbackCopy(text, copyBtn); });
+      } else {
+        fallbackCopy(text, copyBtn);
+      }
+    });
+  }
+
+  function fallbackCopy(text, btn) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity  = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      btn.textContent = 'コピーしました！';
+      btn.classList.add('copied');
+      setTimeout(function() {
+        btn.textContent = 'コピーする';
+        btn.classList.remove('copied');
+      }, 2500);
+    } catch (e) { /* silent */ }
+    document.body.removeChild(ta);
+  }
+
+  // ===== Init =====
+  function init() {
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        screens.start.classList.add('visible');
+      });
+    });
+
+    initStartScreen();
+    initCopyButton();
+
+    document.getElementById('btn-gen-next').addEventListener('click', onNextClick);
+
+    document.getElementById('btn-gen-retry').addEventListener('click', function() {
+      genAnswers = {};
+      genIndex   = 0;
+      showScreen('start');
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+</body>
+</html>

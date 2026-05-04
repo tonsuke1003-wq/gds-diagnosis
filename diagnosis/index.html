@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>永続型資産コンテキスト™ 発見&診断ツール | GDS</title>
+  <meta name="description" content="あなたが「選ばれ続ける人」になるための資質タイプを12の質問で診断します。物語型・感性型・関係型・探究型のどれかわかります。">
+
+  <!-- OGP -->
+  <meta property="og:title" content="永続型資産コンテキスト™ 発見&診断ツール">
+  <meta property="og:description" content="あなたが「選ばれ続ける人」になるための資質タイプを12の質問で診断。所要時間3分。">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="永続型資産コンテキスト™ 発見&診断ツール">
+  <meta name="twitter:description" content="あなたが「選ばれ続ける人」になるための資質タイプを12の質問で診断。所要時間3分。">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+/* ===== Reset & Base ===== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --color-bg: #FAFAF7;
+  --color-primary: #B85450;
+  --color-text: #2D2D2D;
+  --color-border: #E5E5E5;
+  --color-accent-light: #F0E4D0;
+  --color-white: #FFFFFF;
+  --color-gray-mid: #888888;
+  --color-story: #B85450;
+  --color-sense: #7A9E7E;
+  --color-relation: #5A7BAA;
+  --color-inquiry: #9B7EC8;
+  --font-main: 'Noto Sans JP', sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --shadow-card: 0 4px 16px rgba(0,0,0,0.08);
+  --transition-base: 300ms ease;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-main);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* ===== Layout ===== */
+.app-container {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 16px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== Typography ===== */
+h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+p {
+  font-size: 0.9375rem;
+  line-height: 1.8;
+}
+
+/* ===== Screens (shared fade logic) ===== */
+.screen {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.screen.active {
+  display: flex;
+}
+
+.screen.visible {
+  opacity: 1;
+}
+
+/* ===== Start Screen ===== */
+.start-screen {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 40px 16px;
+  gap: 24px;
+}
+
+.brand-logo {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--color-gray-mid);
+  text-transform: uppercase;
+}
+
+.start-title-area {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.start-label {
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.start-main-title {
+  font-size: 1.375rem;
+  font-weight: 700;
+  line-height: 1.5;
+  color: var(--color-text);
+}
+
+.start-subtitle {
+  font-size: 0.875rem;
+  color: var(--color-gray-mid);
+  line-height: 1.7;
+}
+
+.start-description {
+  background: var(--color-accent-light);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  text-align: left;
+}
+
+.start-description p {
+  font-size: 0.875rem;
+  color: var(--color-text);
+}
+
+.start-info {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.info-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.info-label {
+  font-size: 0.75rem;
+  color: var(--color-gray-mid);
+}
+
+/* ===== Progress Bar ===== */
+.progress-area {
+  padding: 20px 0 8px;
+}
+
+.progress-bar-wrap {
+  background: var(--color-border);
+  border-radius: 100px;
+  height: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--color-primary);
+  border-radius: 100px;
+  transition: width 400ms ease;
+}
+
+.progress-text {
+  font-size: 0.75rem;
+  color: var(--color-gray-mid);
+  margin-top: 8px;
+  text-align: right;
+}
+
+/* ===== Question Screen ===== */
+.question-screen {
+  padding: 16px 0 40px;
+  gap: 0;
+}
+
+.question-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-top: 8px;
+}
+
+.question-text {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  list-style: none;
+}
+
+.option-btn {
+  width: 100%;
+  min-height: 44px;
+  padding: 16px;
+  background: var(--color-white);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-family: var(--font-main);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--transition-base), background var(--transition-base), transform 100ms ease;
+  box-shadow: var(--shadow-card);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.option-btn:active {
+  transform: scale(0.98);
+}
+
+.option-btn.selected {
+  border-color: var(--color-primary);
+  background: #FDF5F5;
+}
+
+.option-btn:hover {
+  border-color: var(--color-primary);
+}
+
+/* ===== Analyzing Screen ===== */
+.analyzing-screen {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 32px;
+  padding: 40px 16px;
+}
+
+.analyzing-animation {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.pulse-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 3px solid var(--color-primary);
+  animation: pulse 1.4s ease-out infinite;
+}
+
+.pulse-ring:nth-child(2) {
+  animation-delay: 0.5s;
+}
+
+.pulse-ring:nth-child(3) {
+  animation-delay: 1s;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.3); opacity: 1; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+.analyzing-icon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+
+.analyzing-text h2 {
+  font-size: 1.125rem;
+  color: var(--color-text);
+}
+
+.analyzing-text p {
+  font-size: 0.875rem;
+  color: var(--color-gray-mid);
+}
+
+/* ===== Result Screen ===== */
+.result-screen {
+  padding: 0 0 60px;
+  gap: 0;
+}
+
+.result-hero {
+  background: linear-gradient(135deg, var(--type-color, var(--color-primary)) 0%, rgba(0,0,0,0.15) 100%);
+  color: var(--color-white);
+  padding: 40px 20px 32px;
+  margin: 0 -16px;
+  text-align: center;
+}
+
+.result-hero .type-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.25);
+  border-radius: 100px;
+  padding: 4px 16px;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+}
+
+.result-hero h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 12px;
+}
+
+.result-hero .catchcopy {
+  font-size: 0.9375rem;
+  opacity: 0.9;
+  line-height: 1.7;
+}
+
+.result-hero .sub-type {
+  margin-top: 16px;
+  font-size: 0.8125rem;
+  opacity: 0.8;
+}
+
+.result-body {
+  padding: 24px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.result-card {
+  background: var(--color-white);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: var(--shadow-card);
+}
+
+.result-card-label {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--type-color, var(--color-primary));
+  margin-bottom: 8px;
+}
+
+.result-card h3 {
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.result-card p {
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.type-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.type-bar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.type-bar-label {
+  font-size: 0.8125rem;
+  width: 56px;
+  flex-shrink: 0;
+  color: var(--color-text);
+}
+
+.type-bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--color-border);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.type-bar-fill {
+  height: 100%;
+  border-radius: 100px;
+  transition: width 800ms ease;
+}
+
+.type-bar-fill.story    { background: var(--color-story); }
+.type-bar-fill.sense    { background: var(--color-sense); }
+.type-bar-fill.relation { background: var(--color-relation); }
+.type-bar-fill.inquiry  { background: var(--color-inquiry); }
+
+.type-bar-score {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  width: 20px;
+  text-align: right;
+  flex-shrink: 0;
+  color: var(--color-gray-mid);
+}
+
+/* ===== Share Buttons ===== */
+.share-area {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.share-area h3 {
+  font-size: 0.9375rem;
+  text-align: center;
+  color: var(--color-text);
+}
+
+.share-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.share-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-main);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  min-height: 44px;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity var(--transition-base), transform 100ms ease;
+}
+
+.share-btn:active {
+  transform: scale(0.97);
+  opacity: 0.85;
+}
+
+.share-btn.x {
+  background: #000000;
+  color: var(--color-white);
+}
+
+.share-btn.line {
+  background: #06C755;
+  color: var(--color-white);
+}
+
+/* ===== CTA to Generator ===== */
+.cta-generator {
+  background: linear-gradient(135deg, #2D2D2D 0%, #444 100%);
+  color: var(--color-white);
+  border-radius: var(--radius-md);
+  padding: 24px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cta-generator h3 {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.cta-generator p {
+  font-size: 0.8125rem;
+  opacity: 0.85;
+  line-height: 1.6;
+}
+
+/* ===== Primary Button ===== */
+.btn-primary {
+  display: block;
+  width: 100%;
+  padding: 16px 24px;
+  background: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-main);
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  min-height: 44px;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity var(--transition-base), transform 100ms ease;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(184, 84, 80, 0.3);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+.btn-secondary {
+  display: block;
+  width: 100%;
+  padding: 14px 24px;
+  background: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  font-family: var(--font-main);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-align: center;
+  cursor: pointer;
+  min-height: 44px;
+  -webkit-tap-highlight-color: transparent;
+  transition: opacity var(--transition-base);
+  text-decoration: none;
+}
+
+.btn-secondary:active {
+  opacity: 0.7;
+}
+
+/* ===== Type color overrides via CSS var ===== */
+[data-type="story"]    { --type-color: var(--color-story); }
+[data-type="sense"]    { --type-color: var(--color-sense); }
+[data-type="relation"] { --type-color: var(--color-relation); }
+[data-type="inquiry"]  { --type-color: var(--color-inquiry); }
+
+/* ===== Utility ===== */
+.mt-auto { margin-top: auto; }
+.mt-8    { margin-top: 8px; }
+.mt-16   { margin-top: 16px; }
+.mt-24   { margin-top: 24px; }
+.text-center { text-align: center; }
+.text-small  { font-size: 0.875rem; }
+.text-muted  { color: var(--color-gray-mid); }
+.hidden { display: none !important; }
+
+/* ===== Responsive ===== */
+@media (min-width: 480px) {
+  .app-container {
+    padding: 0 0;
+  }
+  .result-hero {
+    margin: 0;
+    border-radius: var(--radius-md);
+  }
+}
+  </style>
+</head>
+<body>
+
+<div class="app-container" id="app">
+
+  <!-- ===== START SCREEN ===== -->
+  <div class="screen start-screen active" id="screen-start">
+    <div class="brand-logo">GDS — 小倉なおよ</div>
+
+    <div class="start-title-area">
+      <div class="start-label">永続型資産コンテキスト™</div>
+      <h1 class="start-main-title">発見&診断ツール</h1>
+      <p class="start-subtitle">あなたが「選ばれ続ける人」になるための<br>資質タイプを発見しましょう</p>
+    </div>
+
+    <div class="start-description">
+      <p>稼ぐ力には「型」があります。あなた固有の価値を言語化し、AIにも人にも正しく伝わる「コンテキスト」を見つけましょう。</p>
+    </div>
+
+    <div class="start-info">
+      <div class="info-item">
+        <span class="info-number">12</span>
+        <span class="info-label">問</span>
+      </div>
+      <div class="info-item">
+        <span class="info-number">3</span>
+        <span class="info-label">分</span>
+      </div>
+      <div class="info-item">
+        <span class="info-number">4</span>
+        <span class="info-label">タイプ</span>
+      </div>
+    </div>
+
+    <button class="btn-primary" id="btn-start">診断をはじめる</button>
+    <p class="text-small text-muted text-center">直感で選ぶ。正解はありません。</p>
+  </div>
+
+  <!-- ===== QUESTION SCREEN ===== -->
+  <div class="screen question-screen" id="screen-question">
+    <div class="progress-area">
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progress-bar" style="width: 0%"></div>
+      </div>
+      <div class="progress-text" id="progress-text">1 / 12</div>
+    </div>
+
+    <div class="question-content">
+      <p class="question-text" id="question-text"></p>
+      <ul class="options-list" id="options-list"></ul>
+    </div>
+  </div>
+
+  <!-- ===== ANALYZING SCREEN ===== -->
+  <div class="screen analyzing-screen" id="screen-analyzing">
+    <div class="analyzing-animation">
+      <div class="pulse-ring"></div>
+      <div class="pulse-ring"></div>
+      <div class="pulse-ring"></div>
+      <div class="analyzing-icon">🔍</div>
+    </div>
+    <div class="analyzing-text">
+      <h2>分析中…</h2>
+      <p>あなたの資質タイプを特定しています</p>
+    </div>
+  </div>
+
+  <!-- ===== RESULT SCREEN ===== -->
+  <div class="screen result-screen" id="screen-result">
+    <!-- Hero (dynamically colored) -->
+    <div class="result-hero" id="result-hero">
+      <div class="type-badge" id="result-badge">診断結果</div>
+      <h2 id="result-name"></h2>
+      <p class="catchcopy" id="result-catchcopy"></p>
+      <p class="sub-type" id="result-subtype"></p>
+    </div>
+
+    <div class="result-body">
+
+      <!-- Score bars -->
+      <div class="result-card">
+        <div class="result-card-label">スコア分布</div>
+        <div class="type-bars" id="type-bars"></div>
+      </div>
+
+      <!-- Core -->
+      <div class="result-card">
+        <div class="result-card-label">あなたの本質</div>
+        <p id="result-core"></p>
+      </div>
+
+      <!-- Shake -->
+      <div class="result-card">
+        <div class="result-card-label">人を動かす言葉の力</div>
+        <p id="result-shake"></p>
+      </div>
+
+      <!-- Strength -->
+      <div class="result-card">
+        <div class="result-card-label">強み</div>
+        <p id="result-strength"></p>
+      </div>
+
+      <!-- Trap -->
+      <div class="result-card">
+        <div class="result-card-label">落とし穴</div>
+        <p id="result-trap"></p>
+      </div>
+
+      <!-- Growth -->
+      <div class="result-card">
+        <div class="result-card-label">成長のカギ</div>
+        <p id="result-growth"></p>
+      </div>
+
+      <!-- Match -->
+      <div class="result-card">
+        <div class="result-card-label">相性のいい働き方</div>
+        <p id="result-match"></p>
+      </div>
+
+      <!-- Share -->
+      <div class="result-card share-area">
+        <h3>結果をシェアする</h3>
+        <div class="share-buttons">
+          <a class="share-btn x" id="share-x" href="#" target="_blank" rel="noopener">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M9.294 6.928 14.878 0h-1.324L8.7 6.031 4.58 0H0l5.864 8.53L0 15.343h1.324l5.13-5.965 4.099 5.965H16L9.294 6.928zm-1.816 2.11-.595-.851L1.816.94h2.037l3.821 5.463.595.851 4.967 7.101h-2.037L7.478 9.037z"/></svg>
+            X でシェア
+          </a>
+          <a class="share-btn line" id="share-line" href="#" target="_blank" rel="noopener">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.589 0 0 2.99 0 6.677c0 2.336 1.48 4.39 3.717 5.575-.163.573-.527 1.864-.604 2.152-.096.363.133.358.28.26.115-.077 1.818-1.235 2.554-1.736.675.097 1.37.149 2.053.149C12.411 13.077 16 10.09 16 6.677S12.411 0 8 0z"/></svg>
+            LINE でシェア
+          </a>
+        </div>
+      </div>
+
+      <!-- CTA to generator -->
+      <div class="cta-generator">
+        <h3>次のステップ：<br>AIに渡す「わたしの取説」を作る</h3>
+        <p>診断結果をベースに、AIが毎回あなたの価値を引き出す<br>パーソナルプロンプトを作成しましょう。</p>
+        <a class="btn-primary" href="/generator" id="btn-go-generator">「わたしの取説」を作る →</a>
+      </div>
+
+      <!-- Retry -->
+      <button class="btn-secondary mt-16" id="btn-retry">もう一度診断する</button>
+
+    </div>
+  </div>
+
+</div><!-- /.app-container -->
+
+<script>
+// ===== data.js =====
+
+const QUESTIONS = [
+  {
+    id: 1,
+    text: '久しぶりに会った友人とのランチ。あなたが一番盛り上がるのはどんな話？',
+    options: [
+      { text: 'これまでの人生で起きた、忘れられない出来事の話', type: 'story' },
+      { text: '最近見つけた、なんかいい雰囲気のお店や場所の話', type: 'sense' },
+      { text: 'お互いの近況や、共通の知人の話', type: 'relation' },
+      { text: '最近気になっているテーマや、考えていることの話', type: 'inquiry' },
+    ],
+  },
+  {
+    id: 2,
+    text: '旅行先を選ぶとき、あなたの決め手になるのは？',
+    options: [
+      { text: 'そこに行くまでのストーリーや、その土地の歴史', type: 'story' },
+      { text: '写真で見た景色や雰囲気が「なんかいい」と感じたこと', type: 'sense' },
+      { text: '一緒に行く人と楽しめそうか、現地で誰に会えるか', type: 'relation' },
+      { text: 'そこでしか体験できないことや、まだ知らない発見があるか', type: 'inquiry' },
+    ],
+  },
+  {
+    id: 3,
+    text: '本屋さんでつい長居してしまうコーナーは？',
+    options: [
+      { text: 'エッセイ・ノンフィクション・人物伝', type: 'story' },
+      { text: '写真集・アート・デザイン関連', type: 'sense' },
+      { text: '心理学・コミュニケーション・対人関係の本', type: 'relation' },
+      { text: '思想・哲学・専門書・新しい分野の入門書', type: 'inquiry' },
+    ],
+  },
+  {
+    id: 4,
+    text: 'SNSで思わず「いいね」を押してしまうのは、どんな投稿？',
+    options: [
+      { text: '誰かの体験談や、グッとくるエピソード', type: 'story' },
+      { text: 'センスのいい写真や、おしゃれな世界観', type: 'sense' },
+      { text: '共感できる、誰かに教えたくなる内容', type: 'relation' },
+      { text: '「なるほど」と思える、新しい視点や知識', type: 'inquiry' },
+    ],
+  },
+  {
+    id: 5,
+    text: '仕事で「これは私らしい仕事ができた」と感じる瞬間は？',
+    options: [
+      { text: '自分の経験を活かして、深く納得してもらえる提案ができたとき', type: 'story' },
+      { text: '「なんかいい」を形にして、相手にも伝わったとき', type: 'sense' },
+      { text: '相手の言葉にならない本音を引き出して、関係が深まったとき', type: 'relation' },
+      { text: '誰も気づいていなかった切り口や本質を発見したとき', type: 'inquiry' },
+    ],
+  },
+  {
+    id: 6,
+    text: 'クライアントから「あなたに頼んでよかった」と言われるのは、どんなとき？',
+    options: [
+      { text: '私自身の経験や物語に、信頼を寄せてくれたとき', type: 'story' },
+      { text: '期待を超える質感やセンスを届けられたとき', type: 'sense' },
+      { text: '単なる作業ではなく、伴走してくれたと感じてもらえたとき', type: 'relation' },
+      { text: '表面的な依頼の裏にある本当の課題に気づけたとき', type: 'inquiry' },
+    ],
+  },
+  {
+    id: 7,
+    text: 'AIが作った文章やデザインを見たとき、あなたが最初に感じる違和感は？',
+    options: [
+      { text: '体温がない、リアリティがない', type: 'story' },
+      { text: 'つるっとしてフックがない、引っかかりがない', type: 'sense' },
+      { text: '誰に向けて書いてるのかが見えない', type: 'relation' },
+      { text: '表面的で深みがない、本質をついていない', type: 'inquiry' },
+    ],
+  },
+  {
+    id: 8,
+    text: 'あなたが発信するとき、つい時間をかけてしまうのは？',
+    options: [
+      { text: 'エピソードや体験を、どう物語として伝えるか', type: 'story' },
+      { text: '写真選びや言葉選び、全体の雰囲気作り', type: 'sense' },
+      { text: '読み手が「自分のことだ」と感じてくれる届け方', type: 'relation' },
+      { text: '表現の裏にある考え方や、論理の組み立て', type: 'inquiry' },
+    ],
+  },
+  {
+    id: 9,
+    text: '「この人すごいな」と心から尊敬するのは、どんな人？',
+    options: [
+      { text: '困難を乗り越えてきた経験を、自分の言葉で語れる人', type: 'story' },
+      { text: '独自の世界観や美意識を貫いている人', type: 'sense' },
+      { text: 'どんな相手とも深い信頼関係を築ける人', type: 'relation' },
+      { text: '物事の本質を見抜き、新しい視点を提示できる人', type: 'inquiry' },
+    ],
+  },
+  {
+    id: 10,
+    text: '仕事をしていて、一番モヤモヤするのはどんなとき？',
+    options: [
+      { text: '自分の経験や想いが、相手に伝わらないと感じたとき', type: 'story' },
+      { text: '「なんか違う」と感じるのに、それを言語化できないとき', type: 'sense' },
+      { text: '関係性が表面的なまま、深まらないとき', type: 'relation' },
+      { text: '表面的な答えで満足している人を見たとき', type: 'inquiry' },
+    ],
+  },
+  {
+    id: 11,
+    text: 'あなたが理想とする「選ばれ続ける働き方」に、一番近いのは？',
+    options: [
+      { text: '私の人生そのものに価値を感じてもらえる働き方', type: 'story' },
+      { text: '私のセンスや世界観で選んでもらえる働き方', type: 'sense' },
+      { text: '「あなたじゃなきゃ」と長く伴走してもらえる働き方', type: 'relation' },
+      { text: '私の視点や思考力に対価を払ってもらえる働き方', type: 'inquiry' },
+    ],
+  },
+  {
+    id: 12,
+    text: 'AIで誰でもそれっぽいものが作れる時代。それでも、あなたがどうしても譲れないのは？',
+    options: [
+      { text: '自分の経験から生まれる、リアリティのある言葉や提案', type: 'story' },
+      { text: '自分にしか作れない、独自のセンスや世界観', type: 'sense' },
+      { text: '一人ひとりに合わせた、深い関係性とコミュニケーション', type: 'relation' },
+      { text: '表面的じゃない、本質をついた問いや視点', type: 'inquiry' },
+    ],
+  },
+];
+
+const TYPE_DATA = {
+  story: {
+    name: '物語型で選ばれる人',
+    key: 'story',
+    catchcopy: '人生そのものが、誰にも真似できないコンテキストになる人',
+    core: '人生の起伏・経験・葛藤から生まれる「物語の深さ」。これが、あなたが何度AIツールを乗り換えても、ずっとあなたを支え続ける資産です。',
+    shake: 'あなたの強みは、これまで歩んできた人生の起伏そのものです。順風満帆だった時期だけでなく、迷ったこと、つまずいたこと、回り道したこと——その全部が、いま、あなたの言葉や提案に深さを与えています。\n\nAIは過去のデータから「正解らしきもの」を導き出せます。でもAIには、あなたが実際に見てきた風景も、流した涙も、握りしめてきた決意もありません。あなたの人生の物語こそが、AIには絶対に複製できない、たったひとつの揺らぎなのです。',
+    strength: 'これからの時代、AIで誰でもそれっぽい文章やデザインが作れるようになります。だからこそ、人は「この人だから頼みたい」という理由を強く求めるようになります。\n\n物語型のあなたは、自分の経験を交えて語ったとき、相手の心に深く届く力を持っています。「この人は本当にわかっている」「だから信じられる」——そう感じてもらえるのが、あなたの最大の武器です。\n\nクライアントワーク、ブランディング、講座運営、コミュニティ作り。「人」が決め手になる場面で、あなたは圧倒的に強い。経験という、誰にも真似できない資産を持っているからです。',
+    trap: '物語型の人がはまりやすい落とし穴があります。それは、過去の経験に頼りすぎて、目の前の「今」を見逃してしまうこと。「私の時はこうだった」「以前のクライアントはこう言っていた」——気づくと過去の話が増えていませんか？\n\n経験は武器ですが、武器ばかり磨いて、目の前の相手の声を聞き逃したら本末転倒です。\n\nこれは、永続型資産コンテキスト™の観点でも要注意です。物語の蓄積はあるのに、更新が止まっている状態。昨日のあなたが、今日のAIに入っていない。これではせっかくの資産が機能しません。',
+    growth: '物語型のあなたが大切にすべきは、過去の物語を蓄積するだけでなく、今日の自分を更新し続けることです。\n\n仕事で起きたこと、クライアントとの会話、読んだ本、感じた違和感——どんなに小さなことでも、感情の動きと一緒に記録する。これが土台の蓄積です。\n\nそして同じくらい大事なのが、毎日のように起きる「自分の変化」をAIに渡し続けること。昨日と今日では、感じることも、考えていることも、少しずつ違います。その変化を反映しないコンテキストは、すぐに古びます。\n\n「今日感じたことを書く」「最新の気づきをAIに渡す」——この更新の習慣こそが、物語型のあなたを永続的に支える資産になります。',
+    match: '相性がいい：感性型 → あなたの物語に、感性型のフックが加わると、深さと美しさが両立します。\n学びになる：探究型 → 物語に流されすぎる癖を、探究型の本質を見抜く視点が補ってくれます。',
+    templateText: '私は人生の経験や物語を大切にする人間です。過去の体験から生まれる深さやリアリティを、言葉や提案に込めることが私らしさです。',
+  },
+  sense: {
+    name: '感性型で選ばれる人',
+    key: 'sense',
+    catchcopy: '「これじゃない」を一瞬で見抜ける、AI時代に最も貴重な感覚を持つ人',
+    core: '理屈で説明できない直感・センス・違和感の感度。これが、AIがどれほど進化しても、ずっとあなたを支え続ける資産です。',
+    shake: 'あなたの強みは、理屈で説明できない「これ違う」「これ好き」を一瞬で察知する力です。なぜそう感じるのかを言葉にする前に、もう答えを掴んでいる。これは訓練で身につくものではなく、あなたが生まれ持った、最も貴重な資産です。\n\nAIが量産する時代に、つるっとした、引っかかりのないアウトプットが世界を埋めていきます。そこに「これ、なんか違う」と気づける人は、実はとても少ない。気づけたとしても、その違和感を見過ごさずに直せる人は、もっと少ない。あなたはその希少な感覚を持っています。',
+    strength: 'AIは「最大公約数」のアウトプットを瞬時に出します。でも、人を立ち止まらせるのは、最大公約数ではなくフックです。違和感、引っかかり、ざらつき——人の心を動かすのは、いつだって「ちょっと違う何か」なんです。\n\n感性型のあなたは、フックを作れる人です。デザインの最終ジャッジ、コピーの一言、ビジュアルの選定——AIが量産したものを「ここを変えるだけで生きてくる」と直感できる。これからの時代、この感覚はますます価値が上がっていきます。',
+    trap: '感性型の人がはまりやすい落とし穴は、直感を言葉にできないことです。「なんとなく違う」「うまく言えないけどしっくりこない」——あなたの直感は正しい。でも、それを相手に伝えられないと、クライアントやチームに「ふわっとした人」と思われてしまう。せっかくの感覚が、信頼に変わらない。\n\nもうひとつの罠は、感性が「変わっていく」ことを忘れること。今日のあなたの感性と、半年後のあなたの感性は違います。永続型資産コンテキスト™は、最新の感性を更新し続けてこそ、本物の資産になります。',
+    growth: '感性型のあなたにおすすめなのは、違和感の正体をAIと一緒に分解する習慣です。「このデザイン、なんか違う」と感じたとき、AIに「なぜ違うと感じたのか、可能性を10個挙げて」と聞いてみる。AIが出した10個から「これだ」と選ぶだけで、あなたの感覚が言語化されていきます。これが感性の蓄積です。\n\nそして、感性は「育つ」もの。新しいものに触れた、印象に残った瞬間、嫌だと感じた違和感——これを定期的にAIに渡し直すことで、AIはいつも「最新のあなたの感性」で答えてくれるようになります。\n\nAIをセンスの代わりに使うのではなく、あなたのセンスを言語化し、更新し続けるパートナーとして使う。これが感性型の最強の活用法です。',
+    match: '相性がいい：探究型 → あなたの直感を、探究型の論理が裏付けてくれます。\n学びになる：関係型 → 感性に閉じこもらず、相手に伝える力が加わると無敵になります。',
+    templateText: '私は直感や感覚を大切にする人間です。「なんかいい」「これ違う」という感覚を、丁寧に言葉や形にしていくことが私らしさです。',
+  },
+  relation: {
+    name: '関係型で選ばれる人',
+    key: 'relation',
+    catchcopy: '「あなたなしではいられない」と、最も言われやすい人',
+    core: '人と人の間で生まれる空気を読む力、深い信頼関係を築く力。これが、AIがどれほど進化しても、ずっとあなたを支え続ける資産です。',
+    shake: 'あなたの強みは、人と人の間に生まれる空気を読み、言葉にならない本音を引き出す力です。クライアントが本当に困っていること、チームが言い出せずにいること、相手が一番喜ぶ瞬間——あなたはそれを察知できる。これは、AIには絶対に真似できない領域です。\n\nAIは膨大な情報を処理できますが、目の前の人の表情の揺らぎ、声のトーンの変化、沈黙の意味を読み取ることはできません。人と深く関わる力こそが、あなたの最も希少な資産です。',
+    strength: 'これからの時代、AIで効率化できる仕事はどんどん自動化されます。でも、「あなたじゃなきゃ」と指名される仕事は、絶対に消えません。むしろ価値が上がります。\n\n関係型のあなたは、「あなたなしではいられない」と最も言われやすいタイプです。クライアントの事業に深く入り込み、伴走し、一緒に育っていける。単なる外注先ではなく、事業のパートナーとして認識される。これが、AI時代に最も強いポジションです。',
+    trap: '関係型の人がはまりやすい落とし穴は、一人ひとりに丁寧に対応しすぎて、自分が消耗してしまうことです。目の前の人を大切にする姿勢は素晴らしい。でも、それが行き過ぎると、自分の発信や仕組み化が後回しになり、新しい出会いが生まれない。気づいたら、いつも同じメンバーの中で頑張り続けている——この状態に心当たりはありませんか？\n\nもうひとつの罠は、「相手のコンテキスト」ばかり把握して、「自分のコンテキスト」を更新するのを忘れること。あなた自身が今何を感じ、何を大切にしているかを、AIに渡し続けることも忘れないでください。',
+    growth: '関係型のあなたにおすすめなのは、クライアントごとのコンテキストをAIに蓄積させる習慣です。ヒアリングで得た気づき、相手の口癖、好きなこと、避けたいこと——これを丁寧にAIに渡しておく。すると、提案や文章を作るとき、AIが「その人らしさ」を踏まえた答えを返してくれます。\n\nそして、関係性は時間とともに変化します。クライアントとの関係性も、あなた自身の状態も、毎月のように変わっていく。だからこそ、定期的にコンテキストを更新する習慣が、永続型資産コンテキスト™を本物の資産にします。\n\n「先月のあなた」ではなく「今のあなた」が、いつもAIに入っている状態。これが、関係性を仕組みで支える土台になります。',
+    match: '相性がいい：物語型 → あなたの深い関係性に、物語型の人生の重みが加わると、忘れられない存在になれます。\n学びになる：感性型 → 関係性に没頭しすぎないバランスを、感性型の俯瞰した視点が教えてくれます。',
+    templateText: '私は人との関わりを大切にする人間です。相手の本音を引き出し、深い信頼関係を築きながら一緒に育っていくことが私らしさです。',
+  },
+  inquiry: {
+    name: '探究型で選ばれる人',
+    key: 'inquiry',
+    catchcopy: 'AIに「最大公約数じゃない問い」を投げられる、稀有な思考力を持つ人',
+    core: '本質を見抜く力、新しい問いを立てる思考の癖。これが、AIがどれほど進化しても、ずっとあなたを支え続ける資産です。',
+    shake: 'あなたの強みは、表面的な答えで満足せず、「なぜ？」「本当にそう？」を掘り下げ続ける思考の癖です。みんなが「そういうものだ」と受け流すところで、あなただけが立ち止まり、本質を見つけにいく。\n\nAIは「よくある答え」を瞬時に出せます。でも、良い問いを立てることはできません。良い問いを立てられるのは人間だけ、それも、深く考えることをやめなかった人だけです。あなたの思考力こそが、AI時代に最も価値が上がる資産です。',
+    strength: 'AIに「最大公約数」の答えを聞いている人は、これからどんどん埋もれていきます。差がつくのは、AIに何を問うかです。\n\n探究型のあなたは、AIに「最大公約数じゃない問い」を投げられる稀有な存在です。プロンプト設計、戦略構築、課題の本質特定——AIを「答えを出す道具」ではなく「思考のパートナー」として使える。これからの時代、この使い方ができる人が、圧倒的に選ばれていきます。',
+    trap: '探究型の人がはまりやすい落とし穴は、深く考えすぎて行動が遅くなることです。「もう少し調べてから」「もっと完璧な答えを出してから」——気づくと、発信も提案も後回しになっていませんか？\n\nAI時代は、思考の深さと同じくらい、思考のスピードが問われます。完璧じゃない答えでも、出してフィードバックを得る方が、結果として深い答えに近づけます。\n\nもうひとつの罠は、「考え方の更新」を忘れて、過去の思考の枠に縛られ続けること。永続型資産コンテキスト™は、思考も日々アップデートしてこそ機能します。',
+    growth: '探究型のあなたにおすすめなのは、考えた結果ではなく「考えるプロセス」を記録する習慣です。「この問いはなぜ重要だと感じたか」「どこで思考が止まったか」「別の切り口はないか」——プロセスを残しておくと、AIに渡したとき、あなたの思考の癖を踏まえた答えが返ってきます。\n\nそして探究型こそ、思考を更新し続けることが大事です。新しい問いを発見するたび、考え方が変わるたび、それをAIに渡し直していきましょう。\n\n「昨日までの自分」と「今日の自分」の差分を、AIが追従できる状態を作る。これが永続型資産コンテキスト™の真髄です。AIをあなたの「考える相棒」にしてください。一人で深く潜るより、二人で潜る方が、もっと深いところまで行けます。',
+    match: '相性がいい：関係型 → あなたの深い思考に、関係型の人を巻き込む力が加わると、影響力が一気に広がります。\n学びになる：物語型 → 論理に偏りすぎず、物語型の感情の温度を借りると、伝わり方が変わります。',
+    templateText: '私は本質を見抜くことを大切にする人間です。表面的な答えで満足せず、「なぜ？」を掘り下げて新しい問いを立てることが私らしさです。',
+  },
+};
+
+const TYPE_LABELS = {
+  story: '物語型',
+  sense: '感性型',
+  relation: '関係型',
+  inquiry: '探究型',
+};
+
+// ===== diagnosis.js =====
+
+(function () {
+  'use strict';
+
+  const STORAGE_KEY = 'gds_diagnosis_result';
+
+  let currentIndex = 0;
+  const scores = { story: 0, sense: 0, relation: 0, inquiry: 0 };
+
+  const screens = {
+    start:     document.getElementById('screen-start'),
+    question:  document.getElementById('screen-question'),
+    analyzing: document.getElementById('screen-analyzing'),
+    result:    document.getElementById('screen-result'),
+  };
+
+  const els = {
+    progressBar:  document.getElementById('progress-bar'),
+    progressText: document.getElementById('progress-text'),
+    questionText: document.getElementById('question-text'),
+    optionsList:  document.getElementById('options-list'),
+    btnStart:     document.getElementById('btn-start'),
+    btnRetry:     document.getElementById('btn-retry'),
+  };
+
+  function showScreen(name) {
+    Object.values(screens).forEach((el) => {
+      el.classList.remove('active', 'visible');
+    });
+    const target = screens[name];
+    target.classList.add('active');
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        target.classList.add('visible');
+      });
+    });
+  }
+
+  function updateProgress() {
+    const pct = (currentIndex / QUESTIONS.length) * 100;
+    els.progressBar.style.width = pct + '%';
+    els.progressText.textContent = (currentIndex + 1) + ' / ' + QUESTIONS.length;
+  }
+
+  function renderQuestion() {
+    const q = QUESTIONS[currentIndex];
+    updateProgress();
+
+    els.questionText.style.opacity = '0';
+    els.optionsList.style.opacity = '0';
+
+    setTimeout(() => {
+      els.questionText.textContent = q.text;
+      els.optionsList.innerHTML = '';
+      q.options.forEach((opt) => {
+        const li = document.createElement('li');
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.textContent = opt.text;
+        btn.dataset.type = opt.type;
+        btn.addEventListener('click', onOptionSelect);
+        li.appendChild(btn);
+        els.optionsList.appendChild(li);
+      });
+
+      els.questionText.style.transition = 'opacity 300ms ease';
+      els.optionsList.style.transition = 'opacity 300ms ease';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          els.questionText.style.opacity = '1';
+          els.optionsList.style.opacity = '1';
+        });
+      });
+    }, 250);
+  }
+
+  function onOptionSelect(e) {
+    const btn = e.currentTarget;
+    const type = btn.dataset.type;
+
+    btn.classList.add('selected');
+    document.querySelectorAll('.option-btn').forEach((b) => {
+      b.disabled = true;
+    });
+
+    scores[type] += 1;
+    currentIndex += 1;
+
+    setTimeout(() => {
+      if (currentIndex < QUESTIONS.length) {
+        renderQuestion();
+      } else {
+        finishDiagnosis();
+      }
+    }, 350);
+  }
+
+  function finishDiagnosis() {
+    showScreen('analyzing');
+
+    const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+    const mainType = sorted[0][0];
+    const subType  = sorted[1][0];
+
+    const result = { mainType, subType, scores: { ...scores }, savedAt: Date.now() };
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(result));
+    } catch (e) { /* localStorage unavailable */ }
+
+    setTimeout(() => {
+      renderResult(result);
+      showScreen('result');
+    }, 2000);
+  }
+
+  function renderResult(result) {
+    const data    = TYPE_DATA[result.mainType];
+    const subData = TYPE_DATA[result.subType];
+    const hero    = document.getElementById('result-hero');
+
+    hero.dataset.type = result.mainType;
+    document.getElementById('result-badge').textContent = TYPE_LABELS[result.mainType];
+    document.getElementById('result-name').textContent = data.name;
+    document.getElementById('result-catchcopy').textContent = data.catchcopy;
+    document.getElementById('result-subtype').textContent =
+      'サブタイプ：' + TYPE_LABELS[result.subType] + '（' + subData.name + '）';
+
+    const typeColors = {
+      story:    '#B85450',
+      sense:    '#7A9E7E',
+      relation: '#5A7BAA',
+      inquiry:  '#9B7EC8',
+    };
+    hero.style.background =
+      'linear-gradient(135deg, ' + typeColors[result.mainType] + ' 0%, rgba(0,0,0,0.25) 100%)';
+
+    document.getElementById('result-core').textContent     = data.core;
+    document.getElementById('result-shake').textContent    = data.shake;
+    document.getElementById('result-strength').textContent = data.strength;
+    document.getElementById('result-trap').textContent     = data.trap;
+    document.getElementById('result-growth').textContent   = data.growth;
+    document.getElementById('result-match').textContent    = data.match;
+
+    const total = Object.values(result.scores).reduce((a, b) => a + b, 0) || 1;
+    const barsEl = document.getElementById('type-bars');
+    barsEl.innerHTML = '';
+    const sortedScores = Object.entries(result.scores).sort((a, b) => b[1] - a[1]);
+    sortedScores.forEach(([type, score]) => {
+      const pct = Math.round((score / total) * 100);
+      barsEl.innerHTML +=
+        '<div class="type-bar-item">' +
+        '<span class="type-bar-label">' + TYPE_LABELS[type] + '</span>' +
+        '<div class="type-bar-track">' +
+        '<div class="type-bar-fill ' + type + '" style="width:0%" data-pct="' + pct + '"></div>' +
+        '</div>' +
+        '<span class="type-bar-score">' + score + '</span>' +
+        '</div>';
+    });
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        document.querySelectorAll('.type-bar-fill').forEach((el) => {
+          el.style.width = el.dataset.pct + '%';
+        });
+      });
+    });
+
+    const shareText = encodeURIComponent(
+      '私の「選ばれ続ける」資質タイプは【' + data.name + '】でした！\n' +
+      data.catchcopy + '\n\n#GDS診断 #永続型資産コンテキスト'
+    );
+    const pageUrl = encodeURIComponent(location.href);
+    document.getElementById('share-x').href =
+      'https://twitter.com/intent/tweet?text=' + shareText + '&url=' + pageUrl;
+    document.getElementById('share-line').href =
+      'https://social-plugins.line.me/lineit/share?url=' + pageUrl +
+      '&text=' + shareText;
+  }
+
+  function init() {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        screens.start.classList.add('visible');
+      });
+    });
+
+    els.btnStart.addEventListener('click', () => {
+      currentIndex = 0;
+      Object.keys(scores).forEach((k) => { scores[k] = 0; });
+      showScreen('question');
+      setTimeout(renderQuestion, 50);
+    });
+
+    els.btnRetry.addEventListener('click', () => {
+      currentIndex = 0;
+      Object.keys(scores).forEach((k) => { scores[k] = 0; });
+      showScreen('start');
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+</body>
+</html>
