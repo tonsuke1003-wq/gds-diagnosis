@@ -581,144 +581,6 @@ p {
 [data-type="relation"] { --type-color: var(--color-relation); }
 [data-type="inquiry"]  { --type-color: var(--color-inquiry); }
 
-/* ===== Generator Screens ===== */
-.generator-start-screen {
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 40px 16px;
-  gap: 24px;
-}
-
-.generator-question-screen {
-  padding: 16px 0 40px;
-  gap: 0;
-}
-
-.generator-result-screen {
-  padding: 24px 0 60px;
-  gap: 20px;
-}
-
-.reminder-banner {
-  background: #FFF3CD;
-  border: 1px solid #FFD96A;
-  border-radius: var(--radius-sm);
-  padding: 12px 16px;
-  font-size: 0.8125rem;
-  color: #7A5800;
-  line-height: 1.6;
-}
-
-/* ===== Generated Result ===== */
-.result-prompt-wrap {
-  background: var(--color-white);
-  border-radius: var(--radius-md);
-  padding: 20px;
-  box-shadow: var(--shadow-card);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.result-prompt-text {
-  font-size: 0.9rem;
-  line-height: 1.9;
-  color: var(--color-text);
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
-.copy-btn {
-  width: 100%;
-  padding: 16px;
-  background: var(--color-primary);
-  color: var(--color-white);
-  border: none;
-  border-radius: var(--radius-sm);
-  font-family: var(--font-main);
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  min-height: 44px;
-  -webkit-tap-highlight-color: transparent;
-  transition: opacity var(--transition-base), transform 100ms ease;
-}
-
-.copy-btn:active {
-  transform: scale(0.98);
-  opacity: 0.9;
-}
-
-.copy-btn.copied {
-  background: #4CAF50;
-}
-
-/* ===== Generator Text Input ===== */
-.gen-input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 20px;
-}
-
-.gen-input-label {
-  font-size: 0.8125rem;
-  color: var(--color-gray-mid);
-  font-weight: 600;
-  letter-spacing: 0.03em;
-}
-
-.gen-input-field {
-  width: 100%;
-  padding: 14px 16px;
-  border: 1.5px solid #DDD8CF;
-  border-radius: var(--radius-sm);
-  font-family: var(--font-body);
-  font-size: 0.9375rem;
-  color: var(--color-text);
-  background: #FFFFFF;
-  box-sizing: border-box;
-  transition: border-color 200ms ease, box-shadow 200ms ease;
-  -webkit-appearance: none;
-}
-
-.gen-input-field:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(184,84,80,0.12);
-}
-
-.gen-input-field.error {
-  border-color: #E05555;
-}
-
-textarea.gen-input-field {
-  min-height: 100px;
-  resize: vertical;
-  line-height: 1.6;
-}
-
-.gen-input-hint {
-  font-size: 0.8rem;
-  color: var(--color-gray-mid);
-  line-height: 1.5;
-}
-
-.gen-input-error {
-  font-size: 0.8125rem;
-  color: #E05555;
-  display: none;
-}
-
-.gen-input-error.visible {
-  display: block;
-}
-
-.gen-next-btn-wrap {
-  margin-top: 24px;
-}
-
 /* ===== Utility ===== */
 .mt-auto { margin-top: auto; }
 .mt-8    { margin-top: 8px; }
@@ -745,8 +607,9 @@ textarea.gen-input-field {
 
 <div class="app-container" id="app">
 
-  <!-- ===== DIAGNOSIS: START SCREEN ===== -->
+  <!-- ===== START SCREEN ===== -->
   <div class="screen start-screen active" id="screen-start">
+    <div class="brand-logo">GDS — 小倉なおよ</div>
 
     <div class="start-title-area">
       <div class="start-label">永続型資産コンテキスト™</div>
@@ -777,7 +640,7 @@ textarea.gen-input-field {
     <p class="text-small text-muted text-center">直感で選ぶ。正解はありません。</p>
   </div>
 
-  <!-- ===== DIAGNOSIS: QUESTION SCREEN ===== -->
+  <!-- ===== QUESTION SCREEN ===== -->
   <div class="screen question-screen" id="screen-question">
     <div class="progress-area">
       <div class="progress-bar-wrap">
@@ -792,7 +655,7 @@ textarea.gen-input-field {
     </div>
   </div>
 
-  <!-- ===== DIAGNOSIS: ANALYZING SCREEN ===== -->
+  <!-- ===== ANALYZING SCREEN ===== -->
   <div class="screen analyzing-screen" id="screen-analyzing">
     <div class="analyzing-animation">
       <div class="pulse-ring"></div>
@@ -806,8 +669,9 @@ textarea.gen-input-field {
     </div>
   </div>
 
-  <!-- ===== DIAGNOSIS: RESULT SCREEN ===== -->
+  <!-- ===== RESULT SCREEN ===== -->
   <div class="screen result-screen" id="screen-result">
+    <!-- Hero (dynamically colored) -->
     <div class="result-hero" id="result-hero">
       <div class="type-badge" id="result-badge">診断結果</div>
       <h2 id="result-name"></h2>
@@ -817,41 +681,49 @@ textarea.gen-input-field {
 
     <div class="result-body">
 
+      <!-- Score bars -->
       <div class="result-card">
         <div class="result-card-label">スコア分布</div>
         <div class="type-bars" id="type-bars"></div>
       </div>
 
+      <!-- Core -->
       <div class="result-card">
         <div class="result-card-label">あなたの本質</div>
         <p id="result-core"></p>
       </div>
 
+      <!-- Shake -->
       <div class="result-card">
         <div class="result-card-label">人を動かす言葉の力</div>
         <p id="result-shake"></p>
       </div>
 
+      <!-- Strength -->
       <div class="result-card">
         <div class="result-card-label">強み</div>
         <p id="result-strength"></p>
       </div>
 
+      <!-- Trap -->
       <div class="result-card">
         <div class="result-card-label">落とし穴</div>
         <p id="result-trap"></p>
       </div>
 
+      <!-- Growth -->
       <div class="result-card">
         <div class="result-card-label">成長のカギ</div>
         <p id="result-growth"></p>
       </div>
 
+      <!-- Match -->
       <div class="result-card">
         <div class="result-card-label">相性のいい働き方</div>
         <p id="result-match"></p>
       </div>
 
+      <!-- Share -->
       <div class="result-card share-area">
         <h3>結果をシェアする</h3>
         <div class="share-buttons">
@@ -866,121 +738,23 @@ textarea.gen-input-field {
         </div>
       </div>
 
+      <!-- CTA to generator -->
       <div class="cta-generator">
         <h3>次のステップ：<br>AIに渡す「わたしの取説」を作る</h3>
         <p>診断結果をベースに、AIが毎回あなたの価値を引き出す<br>パーソナルプロンプトを作成しましょう。</p>
-        <button class="btn-primary" id="btn-go-generator">「わたしの取説」を作る →</button>
+        <a class="btn-primary" href="GDS_取説ジェネレーター.html" id="btn-go-generator">「わたしの取説」を作る →</a>
       </div>
 
+      <!-- Retry -->
       <button class="btn-secondary mt-16" id="btn-retry">もう一度診断する</button>
 
     </div>
   </div>
 
-  <!-- ===== GENERATOR: START SCREEN ===== -->
-  <div class="screen generator-start-screen" id="screen-gen-start">
-
-    <div class="start-title-area">
-      <div class="start-label">STEP 2</div>
-      <h1 class="start-main-title">AIに渡す<br>「わたしの取説」</h1>
-      <p class="start-subtitle">5つの質問に答えるだけで<br>あなた専用のAIプロンプトが完成します</p>
-    </div>
-
-    <div class="reminder-banner hidden" id="reminder-banner">
-      ⏰ 前回の診断から3ヶ月が経過しました。取説を更新することをお勧めします。
-    </div>
-
-    <div id="has-diagnosis-block">
-      <div class="result-card" id="diagnosis-summary" style="text-align:center;">
-        <div class="result-card-label" id="gen-type-label"></div>
-        <p id="gen-type-name" style="font-weight:700; font-size:1.0625rem;"></p>
-      </div>
-
-      <div class="start-description mt-16">
-        <p>診断で見つかったあなたの資質タイプをベースに、AIへの指示文（プロンプト）をカスタマイズします。</p>
-      </div>
-
-      <div class="start-info">
-        <div class="info-item">
-          <span class="info-number">5</span>
-          <span class="info-label">問</span>
-        </div>
-        <div class="info-item">
-          <span class="info-number">2</span>
-          <span class="info-label">分</span>
-        </div>
-      </div>
-
-      <button class="btn-primary" id="btn-gen-start">取説を作りはじめる</button>
-      <button class="btn-secondary mt-16" id="btn-back-to-result">診断結果に戻る</button>
-    </div>
-  </div>
-
-  <!-- ===== GENERATOR: QUESTION SCREEN ===== -->
-  <div class="screen generator-question-screen" id="screen-gen-question">
-    <div class="progress-area">
-      <div class="progress-bar-wrap">
-        <div class="progress-bar-fill" id="gen-progress-bar" style="width: 0%"></div>
-      </div>
-      <div class="progress-text" id="gen-progress-text">1 / 5</div>
-    </div>
-
-    <div class="question-content">
-      <p class="question-text" id="gen-question-text"></p>
-      <div id="gen-input-area" class="gen-input-group"></div>
-      <p class="gen-input-error" id="gen-input-error">入力してから次へ進んでください</p>
-      <div class="gen-next-btn-wrap">
-        <button class="btn-primary" id="btn-gen-next">次へ →</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== GENERATOR: ANALYZING SCREEN ===== -->
-  <div class="screen analyzing-screen" id="screen-gen-analyzing">
-    <div class="analyzing-animation">
-      <div class="pulse-ring"></div>
-      <div class="pulse-ring"></div>
-      <div class="pulse-ring"></div>
-      <div class="analyzing-icon">✍️</div>
-    </div>
-    <div class="analyzing-text">
-      <h2>取説を生成中…</h2>
-      <p>あなた専用のAIプロンプトを作成しています</p>
-    </div>
-  </div>
-
-  <!-- ===== GENERATOR: RESULT SCREEN ===== -->
-  <div class="screen generator-result-screen" id="screen-gen-result">
-    <div class="start-title-area text-center">
-      <div class="start-label">完成しました！</div>
-      <h2>あなたの「AIわたし取説」</h2>
-      <p class="start-subtitle text-small">以下をそのままAI（ChatGPT・Claude等）に貼り付けてください</p>
-    </div>
-
-    <div class="result-prompt-wrap">
-      <p class="result-prompt-text" id="gen-result-text"></p>
-      <button class="copy-btn" id="btn-copy">コピーする</button>
-    </div>
-
-    <div class="result-card" style="background: var(--color-accent-light);">
-      <div class="result-card-label">使い方のヒント</div>
-      <p class="text-small">新しいAIチャットを開くたびに、このテキストを最初に貼り付けてから質問してみましょう。AIがあなたの価値を踏まえた返答をしてくれるようになります。</p>
-    </div>
-
-    <div class="cta-generator">
-      <h3>GDSオンラインサロンで<br>さらに深く学ぶ</h3>
-      <p class="text-small" style="opacity:0.85;">取説を活かした収益化の実践法を<br>コミュニティで学べます。</p>
-      <a class="btn-primary" href="#" id="btn-cta-salon">詳しく見る →</a>
-    </div>
-
-    <button class="btn-secondary mt-16" id="btn-gen-retry">もう一度作り直す</button>
-    <button class="btn-secondary mt-8" id="btn-back-to-diagnosis">診断をやり直す</button>
-  </div>
-
 </div><!-- /.app-container -->
 
 <script>
-// ===== Shared Data =====
+// ===== data.js =====
 
 const QUESTIONS = [
   {
@@ -1163,28 +937,8 @@ const TYPE_LABELS = {
   inquiry: '探究型',
 };
 
-// ===== All screens (for cross-IIFE transitions) =====
-const ALL_SCREEN_IDS = [
-  'screen-start', 'screen-question', 'screen-analyzing', 'screen-result',
-  'screen-gen-start', 'screen-gen-question', 'screen-gen-analyzing', 'screen-gen-result',
-];
+// ===== diagnosis.js =====
 
-function showGlobalScreen(id) {
-  ALL_SCREEN_IDS.forEach((sid) => {
-    const el = document.getElementById(sid);
-    if (el) el.classList.remove('active', 'visible');
-  });
-  const target = document.getElementById(id);
-  if (!target) return;
-  target.classList.add('active');
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      target.classList.add('visible');
-    });
-  });
-}
-
-// ===== Diagnosis IIFE =====
 (function () {
   'use strict';
 
@@ -1192,6 +946,13 @@ function showGlobalScreen(id) {
 
   let currentIndex = 0;
   const scores = { story: 0, sense: 0, relation: 0, inquiry: 0 };
+
+  const screens = {
+    start:     document.getElementById('screen-start'),
+    question:  document.getElementById('screen-question'),
+    analyzing: document.getElementById('screen-analyzing'),
+    result:    document.getElementById('screen-result'),
+  };
 
   const els = {
     progressBar:  document.getElementById('progress-bar'),
@@ -1203,13 +964,16 @@ function showGlobalScreen(id) {
   };
 
   function showScreen(name) {
-    const map = {
-      start:     'screen-start',
-      question:  'screen-question',
-      analyzing: 'screen-analyzing',
-      result:    'screen-result',
-    };
-    showGlobalScreen(map[name]);
+    Object.values(screens).forEach((el) => {
+      el.classList.remove('active', 'visible');
+    });
+    const target = screens[name];
+    target.classList.add('active');
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        target.classList.add('visible');
+      });
+    });
   }
 
   function updateProgress() {
@@ -1255,7 +1019,7 @@ function showGlobalScreen(id) {
     const type = btn.dataset.type;
 
     btn.classList.add('selected');
-    document.querySelectorAll('#options-list .option-btn').forEach((b) => {
+    document.querySelectorAll('.option-btn').forEach((b) => {
       b.disabled = true;
     });
 
@@ -1356,7 +1120,7 @@ function showGlobalScreen(id) {
   function init() {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        document.getElementById('screen-start').classList.add('visible');
+        screens.start.classList.add('visible');
       });
     });
 
@@ -1371,331 +1135,6 @@ function showGlobalScreen(id) {
       currentIndex = 0;
       Object.keys(scores).forEach((k) => { scores[k] = 0; });
       showScreen('start');
-    });
-
-    document.getElementById('btn-go-generator').addEventListener('click', () => {
-      window.__genInitAndShow();
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', init);
-})();
-
-// ===== Generator IIFE =====
-(function () {
-  'use strict';
-
-  const STORAGE_KEY = 'gds_diagnosis_result';
-  const THREE_MONTHS_MS = 90 * 24 * 60 * 60 * 1000;
-
-  // 5 free-text questions per v3 spec (Section 15)
-  const GEN_QUESTIONS = [
-    {
-      id: 1,
-      text: 'あなたの仕事・肩書きを教えてください',
-      hint: '例：コーチ、ライター、整体師、オンラインサロン運営 など',
-      inputs: [
-        { key: 'job', placeholder: '仕事・肩書き', type: 'text', multiline: false },
-      ],
-    },
-    {
-      id: 2,
-      text: '仕事やコンテンツで「これだけは譲れない」価値観を3つ教えてください',
-      hint: '例：誠実さ、本質へのこだわり、温かみ、再現性、独自性 など',
-      inputs: [
-        { key: 'value1', placeholder: '価値観①', type: 'text', multiline: false },
-        { key: 'value2', placeholder: '価値観②', type: 'text', multiline: false },
-        { key: 'value3', placeholder: '価値観③', type: 'text', multiline: false },
-      ],
-    },
-    {
-      id: 3,
-      text: 'あなたの言葉の特徴・口調を教えてください',
-      hint: '例：丁寧でやわらかい、率直でシンプル、語りかけるような文体 など',
-      inputs: [
-        { key: 'tone', placeholder: '言葉の特徴・口調', type: 'text', multiline: false },
-      ],
-    },
-    {
-      id: 4,
-      text: 'AIに使ってほしくない表現はありますか？',
-      hint: '例：「革命的」「最先端」などの誇張表現、「〜すべき」などの命令口調 など',
-      inputs: [
-        { key: 'avoid', placeholder: '使ってほしくない表現', type: 'text', multiline: false },
-      ],
-    },
-    {
-      id: 5,
-      text: '最近感じている「変化」や「気づき」を自由に書いてください',
-      hint: '仕事観・価値観・お客様との関わり方など、どんな変化でも OK。取説は定期的に更新するほど精度が上がります。',
-      inputs: [
-        { key: 'update', placeholder: 'ここに自由に書いてください…', type: 'textarea', multiline: true },
-      ],
-    },
-  ];
-
-  let diagResult = null;
-  let genAnswers = {};
-  let genIndex   = 0;
-
-  function showScreen(name) {
-    const map = {
-      start:     'screen-gen-start',
-      question:  'screen-gen-question',
-      analyzing: 'screen-gen-analyzing',
-      result:    'screen-gen-result',
-    };
-    showGlobalScreen(map[name]);
-  }
-
-  function loadDiagnosis() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) return JSON.parse(raw);
-    } catch (e) { /* ignore */ }
-    return null;
-  }
-
-  function initStartScreen() {
-    diagResult = loadDiagnosis();
-
-    const reminderBanner  = document.getElementById('reminder-banner');
-    const genTypeLabel    = document.getElementById('gen-type-label');
-    const genTypeName     = document.getElementById('gen-type-name');
-
-    if (!diagResult) return;
-
-    const typeLabel = TYPE_LABELS[diagResult.mainType] || diagResult.mainType;
-    const typeName  = (TYPE_DATA[diagResult.mainType] || {}).name || typeLabel;
-    genTypeLabel.textContent = typeLabel;
-    genTypeName.textContent  = typeName;
-
-    if (diagResult.savedAt && (Date.now() - diagResult.savedAt) > THREE_MONTHS_MS) {
-      reminderBanner.classList.remove('hidden');
-    }
-  }
-
-  function renderGenQuestion() {
-    const q           = GEN_QUESTIONS[genIndex];
-    const progressBar  = document.getElementById('gen-progress-bar');
-    const progressText = document.getElementById('gen-progress-text');
-    const questionText = document.getElementById('gen-question-text');
-    const inputArea    = document.getElementById('gen-input-area');
-    const errorEl      = document.getElementById('gen-input-error');
-
-    const pct = (genIndex / GEN_QUESTIONS.length) * 100;
-    progressBar.style.width  = pct + '%';
-    progressText.textContent = (genIndex + 1) + ' / ' + GEN_QUESTIONS.length;
-
-    errorEl.classList.remove('visible');
-    questionText.style.opacity = '0';
-    inputArea.style.opacity    = '0';
-
-    setTimeout(() => {
-      questionText.textContent = q.text;
-      inputArea.innerHTML      = '';
-
-      if (q.hint) {
-        const hint = document.createElement('p');
-        hint.className   = 'gen-input-hint';
-        hint.textContent = q.hint;
-        inputArea.appendChild(hint);
-      }
-
-      q.inputs.forEach((inp) => {
-        const savedVal = genAnswers[inp.key] || '';
-        if (inp.multiline) {
-          const ta = document.createElement('textarea');
-          ta.className   = 'gen-input-field';
-          ta.placeholder = inp.placeholder;
-          ta.dataset.key = inp.key;
-          ta.value       = savedVal;
-          inputArea.appendChild(ta);
-        } else {
-          const el = document.createElement('input');
-          el.type        = 'text';
-          el.className   = 'gen-input-field';
-          el.placeholder = inp.placeholder;
-          el.dataset.key = inp.key;
-          el.value       = savedVal;
-          inputArea.appendChild(el);
-        }
-      });
-
-      questionText.style.transition = 'opacity 300ms ease';
-      inputArea.style.transition    = 'opacity 300ms ease';
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          questionText.style.opacity = '1';
-          inputArea.style.opacity    = '1';
-          // Focus first input
-          const first = inputArea.querySelector('.gen-input-field');
-          if (first) first.focus();
-        });
-      });
-    }, 250);
-  }
-
-  function onNextClick() {
-    const inputArea = document.getElementById('gen-input-area');
-    const errorEl   = document.getElementById('gen-input-error');
-    const fields    = inputArea.querySelectorAll('.gen-input-field');
-
-    let valid = true;
-    fields.forEach((f) => {
-      f.classList.remove('error');
-      if (!f.value.trim()) {
-        f.classList.add('error');
-        valid = false;
-      }
-    });
-
-    if (!valid) {
-      errorEl.classList.add('visible');
-      return;
-    }
-
-    errorEl.classList.remove('visible');
-    fields.forEach((f) => {
-      genAnswers[f.dataset.key] = f.value.trim();
-    });
-
-    genIndex += 1;
-
-    if (genIndex < GEN_QUESTIONS.length) {
-      renderGenQuestion();
-    } else {
-      finishGenerator();
-    }
-  }
-
-  function finishGenerator() {
-    showScreen('analyzing');
-    setTimeout(() => {
-      const promptText = buildPrompt();
-      document.getElementById('gen-result-text').textContent = promptText;
-      showScreen('result');
-    }, 2000);
-  }
-
-  function buildPrompt() {
-    if (!diagResult) return '';
-
-    const typeData  = TYPE_DATA[diagResult.mainType] || {};
-    const typeLabel = TYPE_LABELS[diagResult.mainType] || diagResult.mainType;
-
-    const a = genAnswers;
-
-    // Format today's date
-    const now = new Date();
-    const dateStr =
-      now.getFullYear() + '年' +
-      (now.getMonth() + 1) + '月' +
-      now.getDate() + '日';
-
-    const values = [
-      a.value1 || '—',
-      a.value2 || '—',
-      a.value3 || '—',
-    ].map((v) => '- ' + v).join('\n');
-
-    return (
-      '以下は、私の永続型資産コンテキスト™です。\n' +
-      'これからの会話で、このコンテキストを踏まえて回答してください。\n\n' +
-      '# 私のタイプ\n' +
-      '私は「' + (typeData.name || typeLabel) + 'で選ばれる人」です。\n' +
-      (typeData.templateText || '') + '\n\n' +
-      '# 私の仕事\n' +
-      (a.job || '—') + '\n\n' +
-      '# 私が譲れない価値観\n' +
-      values + '\n\n' +
-      '# 私の言葉の特徴・口調\n' +
-      (a.tone || '—') + '\n\n' +
-      '# 使いたくない表現\n' +
-      (a.avoid || '—') + '\n\n' +
-      '# 最近の変化・気づき（※定期的に更新）\n' +
-      (a.update || '—') + '\n' +
-      '最終更新日：' + dateStr + '\n\n' +
-      '# あなたへのお願い\n' +
-      '- 上記のコンテキストを踏まえて回答してください\n' +
-      '- 私の口調や価値観に寄り添った言葉選びをしてください\n' +
-      '- 私が使いたくない表現は避けてください\n' +
-      '- AIっぽい最大公約数の答えではなく、私の揺らぎを活かした回答をしてください\n' +
-      '- 「最近の変化・気づき」を最優先で踏まえて回答してください'
-    );
-  }
-
-  function initCopyButton() {
-    const copyBtn = document.getElementById('btn-copy');
-    copyBtn.addEventListener('click', () => {
-      const text = document.getElementById('gen-result-text').textContent;
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(() => {
-          copyBtn.textContent = 'コピーしました！';
-          copyBtn.classList.add('copied');
-          setTimeout(() => {
-            copyBtn.textContent = 'コピーする';
-            copyBtn.classList.remove('copied');
-          }, 2500);
-        }).catch(() => fallbackCopy(text, copyBtn));
-      } else {
-        fallbackCopy(text, copyBtn);
-      }
-    });
-  }
-
-  function fallbackCopy(text, btn) {
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position = 'fixed';
-    ta.style.opacity  = '0';
-    document.body.appendChild(ta);
-    ta.select();
-    try {
-      document.execCommand('copy');
-      btn.textContent = 'コピーしました！';
-      btn.classList.add('copied');
-      setTimeout(() => {
-        btn.textContent = 'コピーする';
-        btn.classList.remove('copied');
-      }, 2500);
-    } catch (e) { /* silent */ }
-    document.body.removeChild(ta);
-  }
-
-  // Exposed for diagnosis IIFE to call when CTA is clicked
-  window.__genInitAndShow = function () {
-    genAnswers = {};
-    genIndex   = 0;
-    initStartScreen();
-    showScreen('start');
-  };
-
-  function init() {
-    initCopyButton();
-
-    document.getElementById('btn-gen-start').addEventListener('click', () => {
-      genAnswers = {};
-      genIndex   = 0;
-      showScreen('question');
-      setTimeout(renderGenQuestion, 50);
-    });
-
-    document.getElementById('btn-gen-next').addEventListener('click', onNextClick);
-
-    document.getElementById('btn-gen-retry').addEventListener('click', () => {
-      genAnswers = {};
-      genIndex   = 0;
-      initStartScreen();
-      showScreen('start');
-    });
-
-    document.getElementById('btn-back-to-result').addEventListener('click', () => {
-      showGlobalScreen('screen-result');
-    });
-
-    document.getElementById('btn-back-to-diagnosis').addEventListener('click', () => {
-      showGlobalScreen('screen-start');
     });
   }
 
